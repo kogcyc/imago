@@ -3,38 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Gallery</title>
+  <title>File Selection</title>
 </head>
 <body>
 
+<input type="file" id="fileInput" multiple>
+<ul id="fileList"></ul>
+
 <script>
+  document.getElementById('fileInput').addEventListener('change', handleFileSelect);
 
-  const fs = require('fs');
-const path = require('path');
+  function handleFileSelect(event) {
+    const fileList = document.getElementById('fileList');
+    fileList.innerHTML = ''; // Clear previous entries
 
-// Get the current directory of the script
-const currentDirectory = __dirname;
-
-// Read the contents of the current directory
-fs.readdir(currentDirectory, (err, files) => {
-  if (err) {
-    console.error('Error reading directory:', err);
-    return;
+    const files = event.target.files;
+    if (files.length === 0) {
+      fileList.innerHTML = '<li>No files selected</li>';
+    } else {
+      for (const file of files) {
+        const listItem = document.createElement('li');
+        listItem.textContent = file.name;
+        fileList.appendChild(listItem);
+      }
+    }
   }
-
-  // Filter out only file names (excluding directories)
-  const fileNames = files.filter(file => fs.statSync(path.join(currentDirectory, file)).isFile());
-
-  // Display the array of file names
-  console.log('File names in the directory:', fileNames);
-});
-
-
-  
 </script>
-
-<!-- Container to hold the images -->
-<div id="image-container"></div>
 
 </body>
 </html>
