@@ -8,42 +8,46 @@
 <body>
 
 <script>
-  // Function to fetch image files in the current directory
-  function fetchImages() {
+  // Function to fetch and display image files in the current directory
+  function displayImages() {
     const imageContainer = document.getElementById('image-container');
 
     // Clear existing content
     imageContainer.innerHTML = '';
 
-    // Fetching images using a simple fetch request
-    fetch('./')
-      .then(response => response.text())
-      .then(html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
+    // Read the contents of the current directory
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.webkitdirectory = true;
+    input.directory = true;
 
-        // Filtering out only image files (you can modify the regex pattern as needed)
-        const imageFiles = Array.from(doc.querySelectorAll('a[href]')).filter(link => /\.(png|jpg|jpeg|gif)$/i.test(link.href));
+    input.addEventListener('change', function () {
+      const files = Array.from(this.files);
 
-        // Creating HTML elements for each image
-        imageFiles.forEach(image => {
-          const imgElement = document.createElement('img');
-          imgElement.src = image.href;
-          imgElement.width = 300;
+      // Filter out only image files (you can modify the regex pattern as needed)
+      const imageFiles = files.filter(file => /\.(png|jpg|jpeg|gif|svg)$/i.test(file.name));
 
-          const urlElement = document.createElement('p');
-          urlElement.textContent = image.href;
+      // Display images
+      imageFiles.forEach(imageFile => {
+        const imgElement = document.createElement('img');
+        imgElement.src = URL.createObjectURL(imageFile);
+        imgElement.width = 300;
 
-          // Appending the image and URL elements to the container
-          imageContainer.appendChild(imgElement);
-          imageContainer.appendChild(urlElement);
-        });
-      })
-      .catch(error => console.error('Error fetching images:', error));
+        const urlElement = document.createElement('p');
+        urlElement.textContent = imageFile.name;
+
+        // Appending the image and URL elements to the container
+        imageContainer.appendChild(imgElement);
+        imageContainer.appendChild(urlElement);
+      });
+    });
+
+    // Trigger the file input dialog
+    input.click();
   }
 
-  // Call the fetchImages function when the page loads
-  window.onload = fetchImages;
+  // Call the displayImages function when the page loads
+  window.onload = displayImages;
 </script>
 
 <!-- Container to hold the images -->
