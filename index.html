@@ -1,1 +1,53 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Gallery</title>
+</head>
+<body>
+
+<script>
+  // Function to fetch image files in the current directory
+  function fetchImages() {
+    const imageContainer = document.getElementById('image-container');
+
+    // Clear existing content
+    imageContainer.innerHTML = '';
+
+    // Fetching images using a simple fetch request
+    fetch('./')
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        // Filtering out only image files (you can modify the regex pattern as needed)
+        const imageFiles = Array.from(doc.querySelectorAll('a[href]')).filter(link => /\.(png|jpg|jpeg|gif)$/i.test(link.href));
+
+        // Creating HTML elements for each image
+        imageFiles.forEach(image => {
+          const imgElement = document.createElement('img');
+          imgElement.src = image.href;
+          imgElement.width = 300;
+
+          const urlElement = document.createElement('p');
+          urlElement.textContent = image.href;
+
+          // Appending the image and URL elements to the container
+          imageContainer.appendChild(imgElement);
+          imageContainer.appendChild(urlElement);
+        });
+      })
+      .catch(error => console.error('Error fetching images:', error));
+  }
+
+  // Call the fetchImages function when the page loads
+  window.onload = fetchImages;
+</script>
+
+<!-- Container to hold the images -->
+<div id="image-container"></div>
+
+</body>
+</html>
