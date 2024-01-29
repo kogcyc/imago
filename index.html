@@ -7,6 +7,17 @@
 </head>
 <body>
 
+from github import Auth, Github
+import os
+
+auth = Auth.Token(os.getenv('SUPER_SECRET'))
+g = Github(auth=auth)
+repo_name = "kogcyc/imago"
+repo = g.get_repo(repo_name)
+contents = repo.get_contents("")
+for content_file in contents:
+    print(content_file.path)
+  
 
 </body>
 </html>
