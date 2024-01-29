@@ -8,46 +8,29 @@
 <body>
 
 <script>
-  // Function to fetch and display image files in the current directory
-  function displayImages() {
-    const imageContainer = document.getElementById('image-container');
 
-    // Clear existing content
-    imageContainer.innerHTML = '';
+  const fs = require('fs');
+const path = require('path');
 
-    // Read the contents of the current directory
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.webkitdirectory = true;
-    input.directory = true;
+// Get the current directory of the script
+const currentDirectory = __dirname;
 
-    input.addEventListener('change', function () {
-      const files = Array.from(this.files);
-
-      // Filter out only image files (you can modify the regex pattern as needed)
-      const imageFiles = files.filter(file => /\.(png|jpg|jpeg|gif|svg)$/i.test(file.name));
-
-      // Display images
-      imageFiles.forEach(imageFile => {
-        const imgElement = document.createElement('img');
-        imgElement.src = URL.createObjectURL(imageFile);
-        imgElement.width = 300;
-
-        const urlElement = document.createElement('p');
-        urlElement.textContent = imageFile.name;
-
-        // Appending the image and URL elements to the container
-        imageContainer.appendChild(imgElement);
-        imageContainer.appendChild(urlElement);
-      });
-    });
-
-    // Trigger the file input dialog
-    input.click();
+// Read the contents of the current directory
+fs.readdir(currentDirectory, (err, files) => {
+  if (err) {
+    console.error('Error reading directory:', err);
+    return;
   }
 
-  // Call the displayImages function when the page loads
-  window.onload = displayImages;
+  // Filter out only file names (excluding directories)
+  const fileNames = files.filter(file => fs.statSync(path.join(currentDirectory, file)).isFile());
+
+  // Display the array of file names
+  console.log('File names in the directory:', fileNames);
+});
+
+
+  
 </script>
 
 <!-- Container to hold the images -->
