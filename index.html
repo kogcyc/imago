@@ -3,32 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>File Selection</title>
+  <title>Image Gallery</title>
 </head>
 <body>
 
-<input type="file" id="fileInput" multiple>
-<ul id="fileList"></ul>
-
-<script>
-  document.getElementById('fileInput').addEventListener('change', handleFileSelect);
-
-  function handleFileSelect(event) {
-    const fileList = document.getElementById('fileList');
-    fileList.innerHTML = ''; // Clear previous entries
-
-    const files = event.target.files;
-    if (files.length === 0) {
-      fileList.innerHTML = '<li>No files selected</li>';
-    } else {
-      for (const file of files) {
-        const listItem = document.createElement('li');
-        listItem.textContent = file.name;
-        fileList.appendChild(listItem);
-      }
-    }
-  }
-</script>
 
 </body>
 </html>
